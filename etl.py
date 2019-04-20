@@ -13,7 +13,7 @@ import csv
 from cassandra.cluster import Cluster
 
 ## SQL query imports
-from sql_queries import(
+from cql_queries import(
     create_keyspace,
     drop_keyspace,
     create_length_table,
@@ -29,6 +29,8 @@ from utils import(
     get_data
 )
 
+# Remove ipython checkpoints (can distort data processing)
+os.system('rm -rf event_data/.ipynb_checkpoints')
 
 ## Create Cassandra cluster and session object
 cluster = Cluster(['127.0.0.1'])
@@ -47,21 +49,37 @@ session.execute(create_session_table)
 session.execute(create_listeners_table)
 
 ## Get dataset to load
-event_data = get_data()
+get_data()
 
 ## Insert data into tables
+# CSV file containing all of the event data rows which have artist names
+file = 'event_datafile_new.csv'
+
 # Insert data into song_lengths table
-for line in event_data:
-    session.execute(song_lengths_insert, (line[8], line[0], line[3], line[9], line[5]))
+with open(file, encoding = 'utf8') as f:
+    csvreader = csv.reader(f)
+    next(csvreader)
+    for line in csvreader:
+        session.execute(song_lengths_insert, (line[8], line[0], line[3], line[9], line[5]))
 
 # Insert into session_table
-for line in event_data:
-    session.execute(session_table_insert, (line[10], line[0], line[9], line[1], line[4], line[3], line[8]))
+with open(file, encoding = 'utf8') as f:
+    csvreader = csv.reader(f)
+    next(csvreader)
+    for line in csvreader:
+        session.execute(session_table_insert, (line[10], line[0], line[9], line[1], line[4], line[3], line[8]))
 
 # Insert into listeners_table
-for line in event_data:
-    session.execute(listeners_table_query, (line[1], line[4], line[9]))
+with open(file, encoding = 'utf8') as f:
+    csvreader = csv.reader(f)
+    next(csvreader)
+    for line in csvreader:
+        session.execute(listeners_table_insert, (line[1], line[4], line[9]))
     
 ## Close database and cluster connections
 session.shutdown()
 cluster.shutdown()
+
+# What to do next...
+print('Tables successfully loaded.')
+print('Now open up run_queries_here.ipynb to execute queries on the tables created...')
