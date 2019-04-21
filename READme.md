@@ -17,7 +17,7 @@
 1. In the terminal, run <code> python etl.py </code> 
     to create and populate the required tables from the CSV files stored in event_data.
     
-2. Use the notebook, <code> run_queries_here.ipynb</code> to execute queries on the populated tables.
+2. Use the notebook, <code> run_queries_here.ipynb</code> to execute queries on the populated tables, and to view explanations for the queries and the primary keys used to construct the tables used.
     
 3. To edit any sql queries, please see <code>cql_queries.py</code> to edit CQL queries, and <code>utils.py</code> to edit the transformation of the data, and/or the data sources used.
     

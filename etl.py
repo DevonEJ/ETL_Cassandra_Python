@@ -60,21 +60,21 @@ with open(file, encoding = 'utf8') as f:
     csvreader = csv.reader(f)
     next(csvreader)
     for line in csvreader:
-        session.execute(song_lengths_insert, (line[8], line[0], line[3], line[9], line[5]))
+        session.execute(song_lengths_insert, (int(line[8]), line[0], int(line[3]), line[9], float(line[5])))
 
 # Insert into session_table
 with open(file, encoding = 'utf8') as f:
     csvreader = csv.reader(f)
     next(csvreader)
     for line in csvreader:
-        session.execute(session_table_insert, (line[10], line[0], line[9], line[1], line[4], line[3], line[8]))
+        session.execute(session_table_insert, (int(line[10]), int(line[8]), line[9], int(line[3]), line[0], line[1], line[4]))       
 
 # Insert into listeners_table
 with open(file, encoding = 'utf8') as f:
     csvreader = csv.reader(f)
     next(csvreader)
     for line in csvreader:
-        session.execute(listeners_table_insert, (line[1], line[4], line[9]))
+        session.execute(listeners_table_insert, (line[9], line[1], line[4], int(line[10])))
     
 ## Close database and cluster connections
 session.shutdown()
